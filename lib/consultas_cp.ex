@@ -29,7 +29,7 @@ El token ha de seguir la nomenclatura de CoinPaprika. Se obtiene con la función
 Ejemplo de salida del get:
 [{"timestamp":"2021-02-14T00:00:00Z","price":1.67,"volume_24h":77673000,"market_cap":937904172}]
 
-La hora está en UTC. Ojo al formato 2021-02-14T00:00:00Z
+La hora está en UTC.
 """
 def get_price(token, date) do
  token_id = CoinPaprika.get_token_id(token)
