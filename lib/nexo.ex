@@ -1,7 +1,7 @@
-defmodule TaxesApp do
-  @moduledoc """
-  Documentation for `TaxesApp`.
-  """
+defmodule Nexo do
+@moduledoc """
+Tratamiento de las transacciones extraidas de nexo.io
+"""
 
 NimbleCSV.define(MyParser, separator: ",", escape: "\n")
 
@@ -20,6 +20,16 @@ Convierte al fecha del fichero de nexo a ISO8610
   def parse_date (date_time) do
     [date, time]=String.Break.split(date_time)
     date <> "T" <> time <> "Z"
+  end
+
+@doc """
+  Agrupar intereses diarios
+  Recibe una lista de mapas cada uno representando una transacción
+"""
+
+  def agrupar_intereses_diarios (transacciones) do
+
+
   end
 
   @doc """
@@ -48,18 +58,15 @@ Convierte al fecha del fichero de nexo a ISO8610
     },.......
 
   """
+
 def nexo_trans(transacciones) do
   File.read!(transacciones)
   |> CSV.parse_string
   |> Enum.map(fn [tx, type, currency_b, value_b, comment, loan, date] ->
-    %{tx: :binary.copy(tx), type: :binary.copy(type), currency_b: :binary.copy(currency_b), value_b: :binary.copy(value_b), comment: :binary.copy(comment), loan: :binary.copy(loan), date: :binary.copy(parse_date(date))}
+    %{tx: tx, type: type, currency_b: currency_b, value_b: value_b, comment: comment, loan: loan, date: parse_date(date)}
     end)
     # En este punto las trasacciones están en una lista de mapas
+  |> agrupar_intereses_diarios
 
+  end
 end
-
-
-
-
-end
-
