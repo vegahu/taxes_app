@@ -2,7 +2,7 @@
 
 App that calculate the gains/losses of crypto currencies to facilitate the anual tax payments.
 
-Focus on Spain taxes.
+Focus on Spanish taxes.
 
 
 
