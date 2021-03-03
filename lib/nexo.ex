@@ -31,7 +31,7 @@ defmodule Nexo do
   @doc """
   Formatea el csv de transacciones descargado de nexo.io y lo mete en un mapa.
 
-  ## Examples
+  ## Ejemplos
 
     iex> TaxesApp.nexo_trans(nexo_transactions.csv)
       %{
