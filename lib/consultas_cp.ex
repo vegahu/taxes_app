@@ -33,13 +33,10 @@ La hora está en UTC. Ojo al formato 2021-02-14T00:00:00Z
 """
 def get_price(token, date) do
  token_id = CoinPaprika.get_token_id(token)
- {:ok, %Tesla.Env{:body => [body]}} = get("/tickers/#{token_id}/historical?start=#{date}&interval=1h&limit=1")
+ {:ok, %Tesla.Env{:body => [body]}} = get("/tickers/" <> token_id <> "/historical?start=" <> date <> "&interval=1h&limit=1")
  body[:price]
 end
 
-def parse_date (date_time) do
-  [date, time]=String.Break.split(date_time)
-  date <> "T" <> time <> "Z"
-end
+
 
 end

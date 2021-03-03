@@ -3,7 +3,7 @@ defmodule Nexo do
   Tratamiento de las transacciones extraidas de nexo.io
   """
 
-  NimbleCSV.define(MyParser, separator: ",", escape: "\n")
+  NimbleCSV.define(NexoParser, separator: ",", escape: "\n")
 
   alias NimbleCSV.RFC4180, as: CSV
 
@@ -14,6 +14,8 @@ defmodule Nexo do
     Ej:
       >CoinPaprika.parse_date("2020-02-14 09:32:23")
       "2020-02-14T09:32:23Z"
+
+
   """
   def parse_date(date_time) do
     [date, time] = String.Break.split(date_time)
