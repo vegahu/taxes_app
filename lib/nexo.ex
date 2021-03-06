@@ -34,7 +34,6 @@ Tratamiento de las transacciones extraidas de nexo.io
 
 
   def parse_trade(oper, type, value_b) do
-    type = parse_type(type)
     case oper do
       :buy when (elem(type,0)== :in) and (value_b > 0) -> value_b
       :sell when (elem(type, 0) == :out) -> String.trim(value_b, "-")
@@ -42,21 +41,25 @@ Tratamiento de las transacciones extraidas de nexo.io
     end
   end
 
-  def parse_currency(oper, type, currency_b) do
-    type = parse_type(type)
-    case oper do
-      :buy when (elem(type,0)== :in) -> currency_b
-      :sell when (elem(type,0)== :out) -> currency_b
-      _ -> ""
-    end
-  end
+  def parse_currency(:buy,{:in, _},"NEXONEXO"), do: "NEXO"
+  def parse_currency(:sell,{:out, _},"NEXONEXO"), do: "NEXO"
+  def parse_currency(:buy,{:in, _},"EURX"), do: "EUR"
+  def parse_currency(:sell,{:out, _},"EURX"), do: "EUR"
+  def parse_currency(:buy,{:in, _},"BNBN"), do: "EUR"
+  def parse_currency(:sell,{:out, _},"BNBN"), do: "EUR"
+  def parse_currency(:buy, {:in, _}, currency), do: currency
+  def parse_currency(:sell, {:out, _}, currency), do: currency
+  def parse_currency(_, _, _), do: ""
+
+
 
   @doc """
   Recibe un lista [NX32DSAFSE, "Deposit", NEXONEXO, 0.2342355, "Comentario", "0", "2021-02-12T12:23Z"]
   """
   def parse_transac([tx, type, currency_b, value_b, comment, _loan, date]) do
+    type = parse_type(type)
     %{}
-    |> Map.put(:type, parse_type(type))
+    |> Map.put(:type, type)
     |> Map.put(:buy, parse_trade(:buy, type, value_b))
     |> Map.put(:buy_currency, parse_currency(:buy, type, currency_b))
     |> Map.put(:sell, parse_trade(:sell, type, value_b))
@@ -81,14 +84,14 @@ Tratamiento de las transacciones extraidas de nexo.io
     usarlo en páginas donde el número de transacciones gratuitas es limitado.
 
   """
-
+  def interest_in_NEXO?(transac) do
+    (elem(transac[:type], 1) == "Interest") and (transac[:buy_currency] == "NEXO")
+  end
 
   def chunk_fun transac, acc do
     if (acc != []) do     # Si no es la primera transacción
       transac = parse_transac(transac)
-      if (elem(transac[:type], 1) == "Interest") and
-            (transac[:buy_currency] == "NEXONEXO") and
-              (transac[:date] == acc[:date]) do
+      if interest_in_NEXO?(transac) and (transac[:date] == acc[:date]) do
         acc = Map.put( acc, :buy ,to_string(String.to_float(acc[:buy]) + String.to_float(transac[:buy])))
         {:cont, acc}
       else
