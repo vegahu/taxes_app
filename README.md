@@ -1,8 +1,12 @@
 # TaxesApp
 
-App that calculate the gains/losses of crypto currencies to facilitate the anual tax payments.
+App that calculates the gains/losses of crypto currencies to facilitate the anual tax payments.
 
 Focus on Spanish taxes.
+
+Just starting. Currently not working.
+
+
 
 
 
