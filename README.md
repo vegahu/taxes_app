@@ -4,26 +4,12 @@ App that calculates the gains/losses of crypto currencies to facilitate the anua
 
 Focus on Spanish taxes.
 
-Just starting. Currently not working.
+Just starting. Currently not fully working.
 
+## Currently working
 
+### Nexo.ex Module 
 
+Allows you to parse the csv you donwload from nexo.io and merge the interest of the same day in one transaction. You'll get a List of a keyword lists, one for each transaction. 
 
-
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `taxes_app` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:taxes_app, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/taxes_app](https://hexdocs.pm/taxes_app).
-
+You can export the result in a csv with "cointracking" format.
