@@ -26,12 +26,14 @@ Tratamiento de las transacciones extraidas de nexo.io
   """
   def parse_type(type) do
     case type do
-      "Interest" -> {:in, type }
+      "Interest" -> {:in, "Interest Income" }
       "Deposit"  -> {:in, type }
       "Withdrawal" -> {:out, type}
       "DepositToExchange" -> {:in, "Deposit"}
       "ExchangeDepositedOn" -> {:in, "Deposit"}
       "ExchangeSell" -> {:in, "Trade"}
+      "WithdrawExchanged" -> {:out, "Withdrawal"}
+      "ExchangeToWithdraw" -> {:in, "Trade"}
     end
   end
 
@@ -80,6 +82,7 @@ Tratamiento de las transacciones extraidas de nexo.io
     |> Keyword.put(:fees, "")
     |> Keyword.put(:fees_currency, "")
     |> Keyword.put(:service, "Nexo.io")
+    |> Keyword.put(:Group, "")
     |> Keyword.put(:commment, tx <> ": " <> comment)
     |> Keyword.put(:date, parse_date(date))
     |> Enum.reverse()
@@ -91,7 +94,7 @@ Tratamiento de las transacciones extraidas de nexo.io
   Recibe una transacción ya normalizada y evalua si es de cobro de intereses en NEXO
   """
   def interest_in_NEXO?(transac) do
-    (elem(Keyword.get(transac, :type), 1) == "Interest") and (Keyword.get(transac, :buy_currency) == "NEXO")
+    (elem(Keyword.get(transac, :type), 1) == "Interest Income") and (Keyword.get(transac, :buy_currency) == "NEXO")
   end
 
   @doc """
@@ -183,7 +186,7 @@ Tratamiento de las transacciones extraidas de nexo.io
   Add the header to the final csv (cointracking format)
   """
   def add_header(transactions) do
-    [["Type", "Buy", "Buy Currency", "sell", "Sell Currency", "Fees", "Fees currency", "Exchange", "Comments", "Date"] | transactions]
+    [["Type", "Buy", "Buy Currency", "sell", "Sell Currency", "Fees", "Fees currency", "Exchange", "Group", "Comments", "Date"] | transactions]
   end
 
   @doc """
